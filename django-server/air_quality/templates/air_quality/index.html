@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <title>Air Data</title>
+</head>
+
+<body>
+    <h1>Air Data</h1>
+    <div style="width:800px; height:600px">
+        <canvas id="myChart1"></canvas>
+    </div>
+    <script>
+        co2DataList = eval('{{co2_data}}');
+        co2xValuesList = eval('{{x_co2}}');
+
+        var ctx = document.getElementById('myChart1').getContext('2d');
+
+        var chart = new Chart(ctx, {
+
+            type: 'line',
+            data: {
+                labels: co2xValuesList,
+                datasets: [{
+                    label: 'CO2',
+                    backgroundColor: 'transparent',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: co2DataList
+                }]
+            }
+        });
+    </script>
+
+    <div style="width:800px; height:600px">
+        <canvas id="myChart2"></canvas>
+    </div>
+    <script>
+        humidDataList = eval('{{humid_data}}');
+        humidxValuesList = eval('{{x_humid}}');
+
+        var ctx = document.getElementById('myChart2').getContext('2d');
+
+        var chart = new Chart(ctx, {
+
+            type: 'line',
+            data: {
+                labels: humidxValuesList,
+                datasets: [{
+                    label: 'Humidity',
+                    backgroundColor: 'transparent',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: humidDataList
+                }]
+            }
+        });
+    </script>
+
+    <div style="width:800px; height:600px">
+        <canvas id="myChart3"></canvas>
+    </div>
+    <script>
+        tempDataList = eval('{{temp_data}}');
+        tempxValuesList = eval('{{x_temp}}');
+
+        var ctx = document.getElementById('myChart3').getContext('2d');
+
+        var chart = new Chart(ctx, {
+
+            type: 'line',
+            data: {
+                labels: tempxValuesList,
+                datasets: [{
+                    label: 'Temperature',
+                    backgroundColor: 'transparent',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: tempDataList
+                }]
+            }
+        });
+    </script>
+
+    <div style="width:800px; height:600px">
+        <canvas id="myChart4"></canvas>
+    </div>
+    <script>
+        vocDataList = eval('{{voc_data}}');
+        vocxValuesList = eval('{{x_voc}}');
+
+        var ctx = document.getElementById('myChart4').getContext('2d');
+
+        var chart = new Chart(ctx, {
+
+            type: 'line',
+            data: {
+                labels: vocxValuesList,
+                datasets: [{
+                    label: 'VOC',
+                    backgroundColor: 'transparent',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: vocDataList
+                }]
+            }
+        });
+    </script>
+
+    <div style="width:800px; height:600px">
+        <canvas id="myChart5"></canvas>
+    </div>
+    <script>
+        pm25DataList = eval('{{pm25_data}}');
+        pm25xValuesList = eval('{{x_pm25}}');
+
+        var ctx = document.getElementById('myChart5').getContext('2d');
+
+        var chart = new Chart(ctx, {
+
+            type: 'line',
+            data: {
+                labels: pm25xValuesList,
+                datasets: [{
+                    label: 'PM2.5',
+                    backgroundColor: 'transparent',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: pm25DataList
+                }]
+            }
+        });
+    </script>
+
+</body>
+
+</html>

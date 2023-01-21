@@ -3,6 +3,8 @@ from django.http import JsonResponse
 from .models import AwairModel
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.db.models import Avg
+from json import dumps
 
 @csrf_exempt
 def consume_data(request):
@@ -57,4 +59,15 @@ def request_json(request):
     data = list(AwairModel.objects.values())
 
     return JsonResponse({'data':data})
+
+def display_average(request):
+    avg_co2 = AwairModel.objects.aggregate(Avg('co2'))
+    avg_hum = AwairModel.objects.aggregate(Avg('humid'))
+    avg_voc = AwairModel.objects.aggregate(Avg("voc"))
+    avg_pm25 = AwairModel.objects.aggregate(Avg("pm25"))
+    avg_temp = AwairModel.objects.aggregate(Avg("temp"))
+   
+
+    return render(request, "air_quality/average.html", {"avg_co2":avg_co2, "avg_hum":avg_hum, 
+    "avg_voc":avg_voc, "avg_pm25":avg_pm25, "avg_temp":avg_temp})
 

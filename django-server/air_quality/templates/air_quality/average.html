@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <title>Air Data</title>
+</head>
+
+<body>
+    <h1>Average</h1>
+
+    <div style="width:800px; height:600px">
+        <canvas id="myChart1"></canvas>
+    </div>
+    <script>
+        co2Avg = '{{avg_co2.co2__avg}}';
+        humAvg = '{{avg_hum.humid__avg}}';
+        vocAvg = '{{avg_voc.voc__avg}}';
+        pm25Avg = '{{avg_pm25.pm25__avg}}';
+        tempAvg = '{{avg_temp.temp__avg}}';
+
+
+        var ctx = document.getElementById('myChart1').getContext('2d');
+
+        var chart = new Chart(ctx, {
+
+            type: 'bar',
+            data: {
+                labels: ["co2", "humidity", "voc", "pm25", "temp"],
+                datasets: [{
+                    label: 'Average',
+                    backgroundColor: 'purple',
+                    data: [co2Avg, humAvg, vocAvg, pm25Avg, tempAvg]
+                }]
+            }
+        });
+    </script>
+
+</body>
+
+</html>

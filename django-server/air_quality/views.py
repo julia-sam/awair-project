@@ -4,7 +4,6 @@ from .models import AwairModel
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.db.models import Avg
-from json import dumps
 
 @csrf_exempt
 def consume_data(request):
@@ -66,8 +65,23 @@ def display_average(request):
     avg_voc = AwairModel.objects.aggregate(Avg("voc"))
     avg_pm25 = AwairModel.objects.aggregate(Avg("pm25"))
     avg_temp = AwairModel.objects.aggregate(Avg("temp"))
-   
 
-    return render(request, "air_quality/average.html", {"avg_co2":avg_co2, "avg_hum":avg_hum, 
+    daily_co2 = AwairModel.objects.raw('''SELECT 1 id, strftime('%Y %m %d', timestamp) as  'date',  avg(co2) as  'avgco2'
+                                                FROM 
+                                                (
+                                                SELECT timestamp, sum(co2) as 'co2'
+                                                FROM air_quality_awairmodel
+                                                GROUP BY  timestamp
+                                                )
+                                                GROUP BY date''')
+    co2 = []
+    for co2_data in daily_co2:
+        co2.append(co2_data.avgco2)
+    
+    days = []
+    for day in daily_co2:
+        days.append(day.date)
+
+    return render(request, "air_quality/average.html", {"days":days, "co2":co2, "avg_co2":avg_co2, "avg_hum":avg_hum, 
     "avg_voc":avg_voc, "avg_pm25":avg_pm25, "avg_temp":avg_temp})
 

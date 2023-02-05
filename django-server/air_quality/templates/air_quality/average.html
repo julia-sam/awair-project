@@ -39,6 +39,30 @@
         });
     </script>
 
+    <div style="width:800px; height:600px">
+        <canvas id="myChart2"></canvas>
+    </div>
+    <script>
+        var daily_co2 = JSON.parse('{{co2}}');
+        var stringtoparse = '{{days|escapejs}}';
+        var days = JSON.parse(stringtoparse.replace(/'/g, '"'));
+
+        var ctx = document.getElementById('myChart2').getContext('2d');
+
+        var chart = new Chart(ctx, {
+
+            type: 'bar',
+            data: {
+                labels: days,
+                datasets: [{
+                    label: 'co2 daily average',
+                    backgroundColor: 'purple',
+                    data: daily_co2
+                }]
+            }
+        });
+    </script>
+
 </body>
 
 </html>

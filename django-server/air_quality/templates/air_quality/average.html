@@ -7,12 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
     <title>Air Data</title>
+    {% load bootstrap5 %} {% bootstrap_css %} {% bootstrap_javascript %}
 </head>
 
 <body>
     <h1>Average</h1>
 
-    <div style="width:800px; height:600px">
+    <div class="chart-container" style="width:800px; height:600px">
         <canvas id="myChart1"></canvas>
     </div>
     <script>
@@ -21,7 +22,6 @@
         vocAvg = '{{avg_voc.voc__avg}}';
         pm25Avg = '{{avg_pm25.pm25__avg}}';
         tempAvg = '{{avg_temp.temp__avg}}';
-
 
         var ctx = document.getElementById('myChart1').getContext('2d');
 
@@ -32,15 +32,21 @@
                 labels: ["co2", "humidity", "voc", "pm25", "temp"],
                 datasets: [{
                     label: 'Average',
-                    backgroundColor: 'purple',
+                    backgroundColor: 'lightBlue',
                     data: [co2Avg, humAvg, vocAvg, pm25Avg, tempAvg]
                 }]
             }
         });
     </script>
 
-    <div style="width:800px; height:600px">
+    <div class="chart-container" style="width:800px; height:600px; position:relative;">
         <canvas id="myChart2"></canvas>
+        <div class="row">
+            <div class="col-md-6">
+                <button onclick="moveChart(1, 'up')" type="button" class="btn btn-danger">Up</button>
+                <button onclick="moveChart(1, 'down')" type="button" class="btn btn-primary">Down</button>
+            </div>
+        </div>
     </div>
     <script>
         var daily_co2 = JSON.parse('{{co2}}');
@@ -56,12 +62,70 @@
                 labels: days,
                 datasets: [{
                     label: 'co2 daily average',
-                    backgroundColor: 'purple',
+                    backgroundColor: 'lightBlue',
                     data: daily_co2
                 }]
             }
         });
     </script>
+
+    <div class="chart-container" style="width:800px; height:600px; position:relative;">
+        <canvas id="myChart3"></canvas>
+        <div class="row">
+            <div class="col-md-6">
+                <button onclick="moveChart(2, 'up')" type="button" class="btn btn-danger">Up</button>
+                <button onclick="moveChart(2, 'down')" type="button" class="btn btn-primary">Down</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var daily_temp = JSON.parse('{{temp}}');
+        var stringtoparse = '{{days_temp|escapejs}}';
+        var days = JSON.parse(stringtoparse.replace(/'/g, '"'));
+
+        var ctx = document.getElementById('myChart3').getContext('2d');
+
+        var chart = new Chart(ctx, {
+
+            type: 'bar',
+            data: {
+                labels: days,
+                datasets: [{
+                    label: 'temperature daily average',
+                    backgroundColor: 'lightBlue',
+                    data: daily_temp
+                }]
+            }
+        });
+    </script>
+
+    <script>
+        function moveChart(chartIndex, direction) {
+            var chartContainer = document.getElementsByClassName('chart-container')[chartIndex];
+            var chartHeight = chartContainer.clientHeight;
+            var chartPosition = parseInt(chartContainer.style.top) || 0;
+
+            if (direction === 'up') {
+                if (chartIndex > 0) {
+                    var prevChartContainer = document.getElementsByClassName('chart-container')[chartIndex - 1];
+                    var prevChartHeight = prevChartContainer.clientHeight;
+                    var prevChartPosition = parseInt(prevChartContainer.style.top) || 0;
+                    prevChartContainer.style.top = (prevChartPosition + chartHeight) + 'px';
+                }
+                chartContainer.style.top = (chartPosition - chartHeight) + 'px';
+            } else if (direction === 'down') {
+                if (chartIndex < document.getElementsByClassName('chart-container').length - 1) {
+                    var nextChartContainer = document.getElementsByClassName('chart-container')[chartIndex + 1];
+                    var nextChartHeight = nextChartContainer.clientHeight;
+                    var nextChartPosition = parseInt(nextChartContainer.style.top) || 0;
+                    nextChartContainer.style.top = (nextChartPosition - chartHeight) + 'px';
+                }
+                chartContainer.style.top = (chartPosition + chartHeight) + 'px';
+            }
+        }
+    </script>
+
 
 </body>
 

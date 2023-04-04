@@ -5,6 +5,8 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.db.models import Avg
 
+#activate virtual env: source env/bin/activate
+
 @csrf_exempt
 def consume_data(request):
     body_unicode = request.body.decode('utf-8')
@@ -69,19 +71,37 @@ def display_average(request):
     daily_co2 = AwairModel.objects.raw('''SELECT 1 id, strftime('%Y %m %d', timestamp) as  'date',  avg(co2) as  'avgco2'
                                                 FROM 
                                                 (
-                                                SELECT timestamp, sum(co2) as 'co2'
+                                                SELECT timestamp, (SUM(co2) / COUNT(co2)) as 'co2'
                                                 FROM air_quality_awairmodel
                                                 GROUP BY  timestamp
                                                 )
                                                 GROUP BY date''')
+    
+    daily_temp = AwairModel.objects.raw('''SELECT 1 id, strftime('%Y %m %d', timestamp) as  'date',  avg(temp) as  'avgtemp'
+                                                FROM 
+                                                (
+                                                SELECT timestamp, (SUM(temp) / COUNT(temp)) as 'temp'
+                                                FROM air_quality_awairmodel
+                                                GROUP BY  timestamp
+                                                )
+                                                GROUP BY date''')
+
     co2 = []
     for co2_data in daily_co2:
         co2.append(co2_data.avgco2)
-    
+
     days = []
     for day in daily_co2:
         days.append(day.date)
 
+    temp = []
+    for temp_data in daily_temp:
+        temp.append(temp_data.avgtemp)
+
+    days_temp = []
+    for day in daily_temp:
+        days_temp.append(day.date)
+
     return render(request, "air_quality/average.html", {"days":days, "co2":co2, "avg_co2":avg_co2, "avg_hum":avg_hum, 
-    "avg_voc":avg_voc, "avg_pm25":avg_pm25, "avg_temp":avg_temp})
+    "avg_voc":avg_voc, "avg_pm25":avg_pm25, "avg_temp":avg_temp, "temp":temp, "days_temp":days_temp})
 
